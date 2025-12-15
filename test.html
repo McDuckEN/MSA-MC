@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستیار هوشمند دانشگاه منتظری</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 5px solid #ffd600;
+        }
+
+        .university-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .university-logo {
+            width: 60px;
+            height: 60px;
+            background: #ffd600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1a237e;
+            font-size: 24px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .ai-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .main-content {
+            display: flex;
+            height: 600px;
+        }
+
+        .chat-container {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #eee;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
+                              url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><text x="50%" y="50%" font-family="Arial" font-size="14" text-anchor="middle" dominant-baseline="middle">دانشگاه منتظری</text></svg>');
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            position: relative;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: left;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        #user-input:focus {
+            border-color: #1a237e;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        #send-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        #send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .sidebar {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+        }
+
+        .university-info {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border-right: 4px solid #1a237e;
+        }
+
+        .university-info h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .contact-info div {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-questions {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            border-right: 4px solid #ffd600;
+        }
+
+        .quick-questions h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .quick-btn:hover {
+            background: #1a237e;
+            color: white;
+            transform: translateX(-5px);
+            border-color: #1a237e;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            width: fit-content;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #1a237e;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .action-btn:hover {
+            background: #1a237e;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                order: -1;
+                min-width: auto;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .university-brand {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="ai-status">
+                <span>هوش مصنوعی فعال</span>
+                <div class="status-dot"></div>
+            </div>
+            <div class="university-brand">
+                <div class="university-logo">م</div>
+                <div>
+                    <h1>دانشگاه منتظری</h1>
+                    <div class="subtitle">دستیار هوشمند آموزشی</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="university-info">
+                    <h3>🏫 اطلاعات دانشگاه</h3>
+                    <div class="contact-info">
+                        <div>📍 آدرس: تهران، خیابان انقلاب، دانشگاه منتظری</div>
+                        <div>📞 تلفن: ۰۲۱-۶۶۱۵۰۰۰۰</div>
+                        <div>🌐 وبسایت: www.montazeri-univ.ac.ir</div>
+                        <div>📧 ایمل: info@montazeri-univ.ac.ir</div>
+                        <div>🕒 ساعت کاری: ۷:۳۰ تا ۱۸:۰۰</div>
+                    </div>
+                </div>
+
+                <div class="quick-questions">
+                    <h3>🚀 سوالات متداول</h3>
+                    <button class="quick-btn" data-question="برنامه کلاس های ترم پاییز ۱۴۰۳ چیست؟">برنامه کلاس‌های ترم پاییز</button>
+                    <button class="quick-btn" data-question="زمان ثبت نام ترم جدید چه زمانی است؟">زمان ثبت‌نام ترم جدید</button>
+                    <button class="quick-btn" data-question="شرایط اخذ واحد اضافی در دانشگاه منتظری چگونه است؟">شرایط اخذ واحد اضافی</button>
+                    <button class="quick-btn" data-question="امتحانات پایان ترم چه تاریخی شروع می شود؟">زمان امتحانات پایان ترم</button>
+                    <button class="quick-btn" data-question="ساعات کاری کتابخانه مرکزی دانشگاه منتظری چه ساعاتی است؟">ساعات کاری کتابخانه</button>
+                    <button class="quick-btn" data-question="آیا امکان تغییر رشته در دانشگاه منتظری وجود دارد؟">تغییر رشته</button>
+                    <button class="quick-btn" data-question="شرایط استفاده از خوابگاه دانشگاه منتظری چیست؟">شرایط خوابگاه</button>
+                    <button class="quick-btn" data-question="نحوه دریافت وام تحصیلی در دانشگاه منتظری چگونه است؟">وام تحصیلی</button>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            🌟 به دستیار هوشمند دانشگاه منتظری خوش آمدید!<br><br>
+                            من اینجام تا در مورد:<br>
+                            • برنامه کلاس‌ها و امتحانات<br>
+                            • ثبت‌نام و انتخاب واحد<br>
+                            • اساتید و دروس<br>
+                            • کتابخانه و امکانات<br>
+                            • و سایر خدمات دانشگاه<br>
+                            راهنماییتون کنم.<br><br>
+                            سوال خودتون رو بپرسید!
+                            <div class="message-time">هم اکنون</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="سوال خود را درباره دانشگاه منتظری بپرسید...">
+                    <button id="send-btn">
+                        <span>ارسال</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" id="clear-chat">پاک کردن چت</button>
+                    <button class="action-btn" id="export-chat">ذخیره مکالمه</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            دانشگاه منتظری - سیستم دستیار هوشمند آموزشی | © ۱۴۰۳
+        </footer>
+    </div>
+
+    <script>
+        class MontazeriUniversityAssistant {
+            constructor() {
+                this.apiKey = "sk-montazeri-university-assistant-2024";
+                this.conversationHistory = [];
+                this.isAPIEnabled = true;
+                
+                this.initializeEventListeners();
+                
+                setTimeout(() => {
+                    this.displayMessage("دستیار هوشمند دانشگاه منتظری با موفقیت راه‌اندازی شد. آماده پاسخگویی به سوالات شما هستم!", 'bot');
+                }, 1000);
+            }
+
+            initializeEventListeners() {
+                const sendBtn = document.getElementById('send-btn');
+                const userInput = document.getElementById('user-input');
+                const quickBtns = document.querySelectorAll('.quick-btn');
+                const clearBtn = document.getElementById('clear-chat');
+                const exportBtn = document.getElementById('export-chat');
+
+                if (sendBtn) {
+                    sendBtn.addEventListener('click', () => this.handleUserInput());
+                }
+                
+                if (userInput) {
+                    userInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.handleUserInput();
+                        }
+                    });
+                }
+
+                if (quickBtns) {
+                    quickBtns.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const question = btn.getAttribute('data-question');
+                            this.askQuestion(question);
+                        });
+                    });
+                }
+
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearChat());
+                }
+
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', () => this.exportConversation());
+                }
+            }
+
+            async handleUserInput() {
+                const userInput = document.getElementById('user-input');
+                if (!userInput) return;
+                
+                const question = userInput.value.trim();
+                
+                if (question) {
+                    await this.askQuestion(question);
+                    userInput.value = '';
+                }
+            }
+
+            async askQuestion(question) {
+                this.displayMessage(question, 'user');
+                this.showTypingIndicator();
+                
+                try {
+                    let answer;
+                    
+                    if (this.isAPIEnabled) {
+                        answer = await this.getAIResponse(question);
+                    } else {
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        answer = this.getUniversityResponse(question);
+                    }
+                    
+                    this.hideTypingIndicator();
+                    this.displayMessage(answer, 'bot');
+                    
+                    this.conversationHistory.push({
+                        question,
+                        answer,
+                        timestamp: new Date().toISOString(),
+                        university: "دانشگاه منتظری"
+                    });
+                    
+                } catch (error) {
+                    this.hideTypingIndicator();
+                    console.error('Error:', error);
+                    const fallbackAnswer = this.getUniversityResponse(question);
+                    this.displayMessage(fallbackAnswer, 'bot');
+                }
+            }
+
+            async getAIResponse(question) {
+                // شبیه‌سازی پاسخ هوش مصنوعی با اطلاعات اختصاصی دانشگاه منتظری
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return this.generateMontazeriResponse(question);
+            }
+
+            generateMontazeriResponse(question) {
+                // پایگاه دانش تخصصی دانشگاه منتظری
+                const montazeriKnowledge = {
+                    // کلاس‌ها و برنامه‌ریزی
+                    "کلاس": [
+                        "📚 برنامه کلاس‌های ترم پاییز ۱۴۰۳ دانشگاه منتظری از ۲۸ شهریور آغاز می‌شود. برنامه کامل هر رشته در سامانه سما قابل مشاهده است.",
+                        "⏰ کلاس‌های دانشگاه منتظری در دو شیفت صبح (۸-۱۲) و عصر (۱۴-۱۸) برگزار می‌شوند. کلاس‌های عملی در ساختمان علوم پایه برگزار می‌گردد."
+                    ],
+                    "برنامه": [
+                        "🗓️ برنامه هفتگی دانشگاه منتظری برای هر ترم در هفته اول شهریور منتشر می‌شود. برای مشاهده به سامانه آموزشی مراجعه کنید.",
+                        "📅 برنامه امتحانات میان‌ترم دانشگاه منتظری در هفته ششم و برنامه پایان‌ترم دو هفته قبل از امتحانات اعلام می‌شود."
+                    ],
+
+                    // ثبت‌نام و انتخاب واحد
+                    "ثبت نام": [
+                        "🎓 ثبت‌نام ترم پاییز ۱۴۰۳ دانشگاه منتظری از ۱۵ شهریور آغاز و تا ۱۰ مهر ادامه دارد. دانشجویان محترم توجه داشته باشند.",
+                        "💻 ثبت‌نام در دانشگاه منتظری فقط از طریق سامانه سما انجام می‌شود. برای مشکلات فنی با اداره فناوری اطلاعات تماس بگیرید."
+                    ],
+                    "انتخاب واحد": [
+                        "📝 انتخاب واحد در دانشگاه منتظری از ۲۰ شهریور فعال می‌شود. حداکثر ۲۰ واحد و برای دانشجویان ممتاز (معدل بالای ۱۷) ۲۴ واحد مجاز است.",
+                        "🔧 برای تغییر در انتخاب واحد تا پایان هفته دوم تحصیلی فرصت دارید. پس از آن تنها با مجوز آموزش امکان‌پذیر است."
+                    ],
+
+                    // امتحانات
+                    "امتحان": [
+                        "📝 امتحانات پایان‌ترم دانشگاه منتظری از ۲۰ دی ماه آغاز می‌شود. برنامه دقیق ۱۵ دی اعلام خواهد شد.",
+                        "🎯 امتحانات میان‌ترم در دانشگاه منتظری معمولاً در هفته هشتم برگزار می‌شوند. نمره این امتحانات ۴۰٪ نمره پایانی را تشکیل می‌دهد."
+                    ],
+                    "نمره": [
+                        "📊 نمرات دانشگاه منتظری حداکثر ۱۰ روز پس از امتحان در سامانه وارد می‌شوند. اعتراض به نمره تا ۷۲ ساعت پس از اعلام امکان‌پذیر است.",
+                        "📈 حداقل نمره قبولی در دانشگاه منتظری ۱۰ می‌باشد. معدل ترمی زیر ۱۲ منجر به اخطار تحصیلی می‌شود."
+                    ],
+
+                    // اساتید
+                    "استاد": [
+                        "👨‍🏫 لیست اساتید دانشگاه منتظری به همراه ساعات مشاوره در سایت دانشگاه موجود است. برای ملاقات حضوری قبلاً هماهنگ کنید.",
+                        "📧 برای ارتباط با اساتید دانشگاه منتظری می‌توانید از ایمیل دانشگاهی یا سامانه LMS استفاده کنید."
+                    ],
+
+                    // کتابخانه
+                    "کتابخانه": [
+                        "📖 کتابخانه مرکزی دانشگاه منتظری: ساعت کاری ۷:۳۰ تا ۲۰:۰۰ (پنجشنبه‌ها تا ۱۴). عضویت برای تمام دانشجویان اجباری است.",
+                        "🔍 کتابخانه دانشگاه منتظری دارای ۵۰,۰۰۰ جلد کتاب و دسترسی به ۲۰,۰۰۰ مقاله بین‌المللی است. جستجوی آنلاین از طریق سایت کتابخانه امکان‌پذیر است."
+                    ],
+
+                    // خوابگاه
+                    "خوابگاه": [
+                        "🏠 خوابگاه‌های دانشگاه منتظری در محوطه دانشگاه واقع شده‌اند. ظرفیت محدود است و اولویت با دانشجویان شهرستانی می‌باشد.",
+                        "💰 هزینه خوابگاه دانشگاه منتظری ترمی ۲,۵۰۰,۰۰۰ تومان می‌باشد. ثبت‌نام از ۱۰ شهریور آغاز می‌شود."
+                    ],
+
+                    // مالی
+                    "شهریه": [
+                        "💵 شهریه ثابت دانشگاه منتظری: ۳,۰۰۰,۰۰۰ تومان. شهریه متغیر بر اساس تعداد واحد محاسبه می‌شود.",
+                        "⏳ مهلت پرداخت شهریه دانشگاه منتظری تا پایان هفته سوم تحصیلی می‌باشد. پس از آن ۱۵٪ جریمه دریافت می‌شود."
+                    ],
+                    "وام": [
+                        "🏦 وام تحصیلی دانشگاه منتظری: حداکثر ۱۵ میلیون تومان. شرایط: معدل بالای ۱۴ و عدم اقساط معوقه.",
+                        "📑 برای دریافت وام دانشگاه منتظری به اداره امور دانشجویی واقع در ساختمان مرکزی مراجعه کنید."
+                    ],
+
+                    // تغییر رشته
+                    "تغییر رشته": [
+                        "🔄 تغییر رشته در دانشگاه منتظری فقط در ابتدای سال تحصیلی و با شرط معدل بالای ۱۵ امکان‌پذیر است.",
+                        "📋 برای تغییر رشته در دانشگاه منتظری باید فرم درخواست را از اداره آموزش گرفته و پس از تأیید مدیر گروه، به شورای آموزشی ارائه دهید."
+                    ],
+
+                    // انضباطی
+                    "انضباطی": [
+                        "⚖️ آیین‌نامه انضباطی دانشگاه منتظری در سایت دانشگاه منتشر شده است. غیبت بیش از ۴ جلسه در هر درس منجر به محرومیت از امتحان می‌شود.",
+                        "🎓 رعایت شئونات اسلامی و پوشش مناسب در دانشگاه منتظری الزامی است. تخلفات در شورای انضباطی بررسی می‌شوند."
+                    ]
+                };
+
+                const lowerQuestion = question.toLowerCase();
+                
+                for (const [keyword, answers] of Object.entries(montazeriKnowledge)) {
+                    if (lowerQuestion.includes(keyword)) {
+                        const randomIndex = Math.floor(Math.random() * answers.length);
+                        return answers[randomIndex];
+                    }
+                }
+
+                const generalResponses = [
+                    "برای اطلاعات دقیق در این مورد، پیشنهاد می‌کنم به اداره آموزش دانشگاه منتظری مراجعه نمایید.",
+                    "لطفاً با مسئول مربوطه در دانشکده خود در دانشگاه منتظری تماس بگیرید.",
+                    "اطلاعات کامل در این زمینه در سامانه آموزشی دانشگاه منتظری موجود است.",
+                    "برای پاسخ دقیق به این سوال، نیاز به بررسی پرونده تحصیلی شما دارم. با راهنمای آموزشی دانشگاه منتظری مشورت کنید."
+                ];
+
+                return generalResponses[Math.floor(Math.random() * generalResponses.length)];
+            }
+
+            getUniversityResponse(question) {
+                const basicKnowledge = {
+                    "کلاس": "برنامه کلاس‌های دانشگاه منتظری در سامانه سما قابل مشاهده است.",
+                    "امتحان": "برنامه امتحانات دانشگاه منتظری دو هفته قبل از شروع اعلام می‌شود.",
+                    "ثبت نام": "ثبت‌نام در دانشگاه منتظری از طریق سامانه سما انجام می‌شود.",
+                    "استاد": "لیست اساتید دانشگاه منتظری در سایت دانشگاه موجود است.",
+                    "کتابخانه": "کتابخانه دانشگاه منتظری از ۷:۳۰ تا ۲۰:۰۰ فعال است."
+                };
+                
+                const lowerQuestion = question.toLowerCase();
+                for (const [key, answer] of Object.entries(basicKnowledge)) {
+                    if (lowerQuestion.includes(key)) {
+                        return answer;
+                    }
+                }
+                
+                return "برای اطلاعات بیشتر با اداره آموزش دانشگاه منتظری تماس بگیرید: ۰۲۱-۶۶۱۵۰۰۰۰";
+            }
+
+            displayMessage(message, sender) {
+                const chatMessages = document.getElementById('chat-messages');
+                if (!chatMessages) return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${message}
+                        <div class="message-time">${this.getCurrentTime()}</div>
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.style.display = 'block';
+                    const chatMessages = document.getElementById('chat-messages');
+                    if (chatMessages) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+            }
+
+            hideTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.style.display = 'none';
+                }
+            }
+
+            getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            clearChat() {
+                const chatMessages = document.getElementById('chat-messages');
+                if (chatMessages) {
+                    chatMessages.innerHTML = '';
+                    this.conversationHistory = [];
+                    this.displayMessage('مکالمه جدید با دستیار دانشگاه منتظری آغاز شد. چگونه می‌توانم کمک‌تان کنم؟', 'bot');
+                }
+            }
+
+            exportConversation() {
+                if (this.conversationHistory.length > 0) {
+                    const data = {
+                        university: "دانشگاه منتظری",
+                        exportDate: new Date().toLocaleDateString('fa-IR'),
+                        conversations: this.conversationHistory
+                    };
+                    
+                    const dataStr = JSON.stringify(data, null, 2);
+                    const blob = new Blob([dataStr], {type: 'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `montazeri-university-chat-${new Date().toLocaleDateString('fa-IR')}.json`;
+                    a.click();
+                    
+                    URL.revokeObjectURL(url);
+                    this.displayMessage('مکالمه با موفقیت ذخیره شد.', 'bot');
+                } else {
+                    this.displayMessage('هیچ مکالمه‌ای برای ذخیره کردن وجود ندارد.', 'bot');
+                }
+            }
+        }
+
+        // راه‌اندازی دستیار دانشگاه منتظری
+        document.addEventListener('DOMContentLoaded', function() {
+            window.montazeriAssistant = new MontazeriUniversityAssistant();
+            console.log('🎓 دستیار دانشگاه منتظری راه‌اندازی شد');
+        });
+    </script>
+</body>
+</html>
