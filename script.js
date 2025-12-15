@@ -1,5 +1,5 @@
 let eventsInitialized = false;
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 
 let requestInProgress = false;
@@ -26,7 +26,7 @@ class AIChatAssistant
         this.conversationHistory = [];
         this.isAPIEnabled = true;
         
-        this.chatGPTApiKey = "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"; // API Key خودتان را قرار دهید
+        this.chatGPTApiKey = "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"; // API Key خودتان را قرار دهید
         this.chatGPTEndpoint = "https://api.openai.com/v1/responses";
         this.isChatGPTAvailable = false;
         
@@ -40,8 +40,10 @@ class AIChatAssistant
     {
         try 
         {
-            const response = await fetch('https://api.openai.com/v1/models', {
-                headers: {
+            const response = await fetch('https://api.openai.com/v1/models', 
+            {
+                headers: 
+                {
                     'Authorization': `Bearer ${this.chatGPTApiKey}`
                 }
             });
@@ -74,43 +76,6 @@ class AIChatAssistant
         {
             statusElement.innerHTML = `<span>${message}</span>`;
         }
-    }
-
-    showWelcomeMessage() 
-    {
-        setTimeout(() => {
-            if (this.isChatGPTAvailable) 
-            {
-                this.displayMessage(
-                    "🎓 **دستیار هوشمند دانشگاه منتظری**\n\n" +
-                    "✨ **قدرت گرفته از ChatGPT 3.5 Turbo** ✨\n\n" +
-                    "من می‌توانم به سوالات شما درباره:\n" +
-                    "• 📚 برنامه کلاس‌ها و امتحانات\n" +
-                    "• 🎓 ثبت‌نام و انتخاب واحد\n" +
-                    "• 👨‍🏫 اساتید و اطلاعات دروس\n" +
-                    "• 📖 کتابخانه و منابع آموزشی\n" +
-                    "• 🏠 خوابگاه و امکانات\n" +
-                    "• 💰 شهریه و وام‌های دانشجویی\n" +
-                    "• ⚖️ قوانین انضباطی\n\n" +
-                    "سوال خود را بپرسید...",
-                    'bot'
-                );
-            } 
-            else 
-            {
-                this.displayMessage(
-                    "🎓 **دستیار دانشگاه منتظری**\n\n" +
-                    "⚠️ **ChatGPT در دسترس نیست**\n\n" +
-                    "در حال حاضر از هوش مصنوعی داخلی استفاده می‌شود.\n\n" +
-                    "📞 **راه‌های ارتباطی دانشگاه:**\n" +
-                    "• تلفن: ۰۲۱-۶۶۱۵۰۰۰۰\n" +
-                    "• سایت: www.montazeri-univ.ac.ir\n" +
-                    "• سامانه: sama.montazeri.ac.ir\n\n" +
-                    "سوال خود را بپرسید...",
-                    'bot'
-                );
-            }
-        }, 500);
     }
 
     initializeEventListeners() 
@@ -167,58 +132,47 @@ class AIChatAssistant
         }
     }
 
-async askQuestion(question) {
-    this.displayMessage(question, 'user');
-    this.showTypingIndicator();
-    
-    try {
-        let answer;
-
-        if (this.isChatGPTAvailable && this.isAPIEnabled) {
-            console.log('🔄 درخواست به ChatGPT ارسال می‌شود...');
-            answer = await this.getChatGPTResponse(question);
-        } 
-        else if (this.isBotpressAvailable) {
-            console.log('🔄 درخواست به Botpress ارسال می‌شود...');
-            answer = await this.getBotpressResponse(question);
-        } 
-        else {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            answer = this.getEnhancedResponse(question);
-        }
-
-        this.hideTypingIndicator();
-        this.displayMessage(answer, 'bot');
-
-        // افزودن به تاریخچه مکالمه
-        this.conversationHistory.push({
-            question,
-            answer,
-            timestamp: new Date().toISOString(),
-            source: this.isChatGPTAvailable ? 'chatgpt' : (this.isBotpressAvailable ? 'botpress' : 'local')
-        });
+    async askQuestion(question)
+    {
+        this.displayMessage(question, 'user');
+        this.showTypingIndicator();
         
-    } catch (error) {
-        this.hideTypingIndicator();
-        console.error('Error in askQuestion:', error);
-        const fallbackAnswer = this.getEnhancedResponse(question);
-        this.displayMessage(fallbackAnswer, 'bot');
+        try 
+        {
+            let answer;
+            
+            if (this.isChatGPTAvailable && this.isAPIEnabled) 
+            {
+                console.log('🔄 درخواست به ChatGPT ارسال می‌شود...');
+                answer = await this.getChatGPTResponse(question);
+            } 
+            else 
+            {
+                await new Promise(resolve => setTimeout(resolve, 800));
+                answer = this.getEnhancedResponse(question);
+            }
+            
+            this.hideTypingIndicator();
+            this.displayMessage(answer, 'bot');
+            
+            // افزودن به تاریخچه مکالمه
+            this.conversationHistory.push(
+        {
+                question,
+                answer,
+                timestamp: new Date().toISOString(),
+                source: this.isChatGPTAvailable ? 'chatgpt' : 'local'
+            });
+            
+        }
+         catch (error) 
+        {
+            this.hideTypingIndicator();
+            console.error('Error in askQuestion:', error);
+            const fallbackAnswer = this.getEnhancedResponse(question);
+            this.displayMessage(fallbackAnswer, 'bot');
+        }
     }
-}
-
-// تابع جدید برای ارسال درخواست به Botpress
-async getBotpressResponse(question) {
-    const response = await fetch('YOUR_BOTPRESS_API_URL', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: question }),
-    });
-    const data = await response.json();
-    return data.reply || 'متاسفانه پاسخ مناسبی پیدا نشد.';
-}
-
 
     async getChatGPTResponse(userMessage) {
         // جلوگیری از ارسال سریع پشت سر هم
@@ -266,7 +220,6 @@ async getBotpressResponse(question) {
         }
     }
     
-
     getEnhancedResponse(question) 
     {
         // پایگاه دانش پیشرفته برای دانشگاه منتظری
@@ -298,24 +251,27 @@ async getBotpressResponse(question) {
                 "🗓️ **برنامه هفتگی دانشگاه منتظری**\n\n" +
                 "📅 **روزهای آموزشی:**\n" +
                 "• شنبه تا چهارشنبه: روزهای آموزشی\n" +
-                "• پنجشنبه: کلاس‌های جبرانی\n" +
-                "• جمعه: تعطیل\n" +
+                "• پنجشنبه و جمعه: تعطیل\n" +
                 "• برنامه هر رشته در سامانه سما موجود است\n\n" +
                 "📱 **دسترسی:** سما → برنامه هفتگی → انتخاب ترم",
 
                 "📅 **برنامه ترمی دانشگاه**\n\n" +
                 "🗓️ **تاریخ‌های مهم:**\n" +
+                "**ترم مهر**"+
+                "•شروع ترم : 15 مهر" +
                 "• میان ترم: هفته ۸ آموزشی\n" +
-                "• پایان ترم: ۲۰ دی تا ۱۰ بهمن\n" +
-                "• تعطیلات: در تقویم آموزشی مشخص شده\n" +
-                "• تغییرات: از طریق سامانه اعلام می‌شود"
+                "• پایان ترم: 28 دی تا 5 بهمن\n" +
+                "**ترم بهمن**"+
+                "•شروع ترم : 28 بهمن" +
+                "• میان ترم: هفته ۸ آموزشی\n" +
+                "• پایان ترم: 28 خرداد تا 5 تیر\n"
             ],
 
             "امتحان": [
                 "📝 **برنامه امتحانات ترم پاییز   **\n\n" +
                 "🗓️ **تاریخ‌های مهم:**\n" +
                 "• امتحانات میان ترم: هفته ۸ آموزشی\n" +
-                "• امتحانات پایان ترم: ۲۰ دی تا ۱۰ بهمن\n" +
+                "• امتحانات پایان ترم: 28 دی تا 5 بهمن\n" +
                 "• اعلام برنامه: ۲ هفته قبل از امتحانات\n\n" +
                 "🏛️ **محل برگزاری:**\n" +
                 "• سالن‌های A, B, C ساختمان مرکزی\n" +
@@ -335,8 +291,8 @@ async getBotpressResponse(question) {
             "پایان ترم": [
                 "🏁 **امتحانات پایان ترم   **\n\n" +
                 "🗓️ **برنامه زمانی:**\n" +
-                "• شروع: ۲۰ دی ماه   \n" +
-                "• پایان: ۱۰ بهمن   \n" +
+                "• شروع: 28 دی ماه   \n" +
+                "• پایان: 5 بهمن   \n" +
                 "• برنامه نهایی: ۱۵ دی اعلام می‌شود\n" +
                 "• سالن‌ها: A, B, C ساختمان مرکزی\n\n" +
                 "📊 **نتایج:** ۱۵ روز پس از آخرین امتحان",
@@ -579,15 +535,37 @@ async getBotpressResponse(question) {
                 "• ظرفیت رشته مقصد: موجود باشد\n" +
                 "• پیش‌نیازها: بررسی شود\n\n" +
                 "💡 **توصیه:** با مشاور آموزشی مشورت کنید"
+            ],
+
+            "منتظری": [
+                "🎓 **درباره دانشگاه منتظری:**\n\n" +
+                "• دانشگاه منتظری از مراکز آموزشی معتبر کشور است که هدف آن تربیت نیروی انسانی متخصص و کارآمد در رشته‌های مختلف است.\n" +
+                "• دانشگاه به امکانات آموزشی و پژوهشی پیشرفته مجهز است و دانشجویان می‌توانند از خدمات مشاوره‌ای و علمی استفاده کنند.",
+            ],
+
+            "بوستان": [
+                
+            "📱 **درباره سامانه بوستان:**\n\n" +
+            "• سامانه بوستان برای ثبت‌نام و انتخاب واحد دانشجویان طراحی شده است و اطلاع‌رسانی در مورد تاریخ‌های مهم نیز از طریق این سامانه انجام می‌شود.",
+            ],
+
+            "سمیاد":[
+                "📊 **درباره سامانه سمیاد:**\n\n" +
+                "• سامانه سمیاد ابزاری است برای مدیریت اطلاعات مربوط به دانشجویان، شامل نمرات، غیبت‌ها و سایر سوابق تحصیلی.",
+            ],
+
+            "سماد":[
+                "🍽️ **درباره سامانه رزرو تغذیه (سماد):**\n\n" +
+                "• سامانه سماد امکان رزرو و خرید وعده‌های غذایی دانشگاه را برای دانشجویان فراهم می‌کند، تا از طریق آن به راحتی بتوانند تغذیه خود را مدیریت کنند."
             ]
         };
 
         const lowerQuestion = question.toLowerCase();
-        
+    
         // جستجوی هوشمند
         let bestResponse = null;
         let bestScore = 0;
-
+    
         for (const [keyword, responses] of Object.entries(enhancedKnowledge)) 
         {
             const score = this.calculateSimilarity(lowerQuestion, keyword);
@@ -597,12 +575,12 @@ async getBotpressResponse(question) {
                 bestResponse = responses[Math.floor(Math.random() * responses.length)];
             }
         }
-
+    
         if (bestScore > 0.3 && bestResponse) 
         {
             return bestResponse;
         }
-
+    
         // پاسخ عمومی
         return this.getGeneralResponse(question);
     }
@@ -837,51 +815,3 @@ function showAbout()
     alert(aboutText);
     return false;
 }
-
-// ===== Botpress Webchat Dynamic Embed =====
-// (function () {
-//   // ساخت iframe
-//   const iframe = document.createElement("iframe");
-
-//   iframe.src = "https://cdn.botpress.cloud/webchat/v3.5/shareable.html?configUrl=https://files.bpcontent.cloud/2025/12/12/22/20251212221222-IPZDCY3A.json";
-//   iframe.style.position = "fixed";
-//   iframe.style.bottom = "20px";
-//   iframe.style.right = "20px";
-//   iframe.style.width = "380px";
-//   iframe.style.height = "520px";
-//   iframe.style.border = "none";
-//   iframe.style.zIndex = "100000"; /* بالاتر از همه */
-//   iframe.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
-//   iframe.style.borderRadius = "8px";
-
-//   // اگر لازم باشه یک دکمه باز/بسته کن
-//   const toggleBtn = document.createElement("button");
-//   toggleBtn.textContent = "💬 Chat";
-//   toggleBtn.style.position = "fixed";
-//   toggleBtn.style.bottom = "20px";
-//   toggleBtn.style.right = "20px";
-//   toggleBtn.style.zIndex = "100001";
-//   toggleBtn.style.padding = "12px 18px";
-//   toggleBtn.style.background = "#007bff";
-//   toggleBtn.style.color = "#fff";
-//   toggleBtn.style.fontSize = "16px";
-//   toggleBtn.style.border = "none";
-//   toggleBtn.style.borderRadius = "50px";
-//   toggleBtn.style.cursor = "pointer";
-//   toggleBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-
-//   let open = false;
-
-//   toggleBtn.onclick = () => {
-//     open = !open;
-//     if (open) {
-//       document.body.appendChild(iframe);
-//       toggleBtn.textContent = "❌ Close";
-//     } else {
-//       iframe.remove();
-//       toggleBtn.textContent = "💬 Chat";
-//     }
-//   };
-
-//   document.body.appendChild(toggleBtn);
-// })();
