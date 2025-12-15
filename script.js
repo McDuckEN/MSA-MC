@@ -839,49 +839,49 @@ function showAbout()
 }
 
 // ===== Botpress Webchat Dynamic Embed =====
-(function () {
-  // ساخت iframe
-  const iframe = document.createElement("iframe");
+// (function () {
+//   // ساخت iframe
+//   const iframe = document.createElement("iframe");
 
-  iframe.src = "https://cdn.botpress.cloud/webchat/v3.5/shareable.html?configUrl=https://files.bpcontent.cloud/2025/12/12/22/20251212221222-IPZDCY3A.json";
-  iframe.style.position = "fixed";
-  iframe.style.bottom = "20px";
-  iframe.style.right = "20px";
-  iframe.style.width = "380px";
-  iframe.style.height = "520px";
-  iframe.style.border = "none";
-  iframe.style.zIndex = "100000"; /* بالاتر از همه */
-  iframe.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
-  iframe.style.borderRadius = "8px";
+//   iframe.src = "https://cdn.botpress.cloud/webchat/v3.5/shareable.html?configUrl=https://files.bpcontent.cloud/2025/12/12/22/20251212221222-IPZDCY3A.json";
+//   iframe.style.position = "fixed";
+//   iframe.style.bottom = "20px";
+//   iframe.style.right = "20px";
+//   iframe.style.width = "380px";
+//   iframe.style.height = "520px";
+//   iframe.style.border = "none";
+//   iframe.style.zIndex = "100000"; /* بالاتر از همه */
+//   iframe.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
+//   iframe.style.borderRadius = "8px";
 
-  // اگر لازم باشه یک دکمه باز/بسته کن
-  const toggleBtn = document.createElement("button");
-  toggleBtn.textContent = "💬 Chat";
-  toggleBtn.style.position = "fixed";
-  toggleBtn.style.bottom = "20px";
-  toggleBtn.style.right = "20px";
-  toggleBtn.style.zIndex = "100001";
-  toggleBtn.style.padding = "12px 18px";
-  toggleBtn.style.background = "#007bff";
-  toggleBtn.style.color = "#fff";
-  toggleBtn.style.fontSize = "16px";
-  toggleBtn.style.border = "none";
-  toggleBtn.style.borderRadius = "50px";
-  toggleBtn.style.cursor = "pointer";
-  toggleBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+//   // اگر لازم باشه یک دکمه باز/بسته کن
+//   const toggleBtn = document.createElement("button");
+//   toggleBtn.textContent = "💬 Chat";
+//   toggleBtn.style.position = "fixed";
+//   toggleBtn.style.bottom = "20px";
+//   toggleBtn.style.right = "20px";
+//   toggleBtn.style.zIndex = "100001";
+//   toggleBtn.style.padding = "12px 18px";
+//   toggleBtn.style.background = "#007bff";
+//   toggleBtn.style.color = "#fff";
+//   toggleBtn.style.fontSize = "16px";
+//   toggleBtn.style.border = "none";
+//   toggleBtn.style.borderRadius = "50px";
+//   toggleBtn.style.cursor = "pointer";
+//   toggleBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
 
-  let open = false;
+//   let open = false;
 
-  toggleBtn.onclick = () => {
-    open = !open;
-    if (open) {
-      document.body.appendChild(iframe);
-      toggleBtn.textContent = "❌ Close";
-    } else {
-      iframe.remove();
-      toggleBtn.textContent = "💬 Chat";
-    }
-  };
+//   toggleBtn.onclick = () => {
+//     open = !open;
+//     if (open) {
+//       document.body.appendChild(iframe);
+//       toggleBtn.textContent = "❌ Close";
+//     } else {
+//       iframe.remove();
+//       toggleBtn.textContent = "💬 Chat";
+//     }
+//   };
 
-  document.body.appendChild(toggleBtn);
-})();
+//   document.body.appendChild(toggleBtn);
+// })();
